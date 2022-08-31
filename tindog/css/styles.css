@@ -1,0 +1,159 @@
+body{
+    font-family: 'Montserrat';
+}
+h1{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3.5rem;
+    line-height: 1.5;
+}
+h3{
+    font-family: 'Montserrat';
+    font-weight: bold;
+}
+p{
+    color: gray;
+    font-family: 'Montserrat-Light';
+}
+
+/* Containers */
+.container-fluid{
+    padding: 3% 15% 7%;
+}
+
+/* Navbar  */
+.navbar-brand{
+    font-family: 'Ubuntu';
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+.navbar{
+    padding:0 0 4.5rem 0;
+}
+.nav-item{
+    padding: 0 18px;
+}
+.nav-link{
+    font-family: 'Montserrat-light';
+    font-size: 1.2rem;
+}
+
+/* Download button */
+
+.button-download{
+    margin: 5% 3% 5% 0;
+}
+/* Title */
+#title{
+    background-color: #ff4c68;
+    color: #fff;
+}
+
+/* title image */
+.title-img{
+    width: 60%;
+    transform: rotate(25deg);
+    position: absolute;
+    right: 30%;
+}
+
+/* Feature section */
+#features{
+    padding: 7% 15%;
+    background-color: #fff;
+    position: relative;
+    z-index: 1;
+}
+.feature-box{
+    text-align: center;
+    padding: 4.5%;
+}
+/* icons */
+.icon{
+    color: #ef8172;
+    margin-bottom: 1rem;
+}
+.icon:hover{
+    color: #ff4c68;
+}
+.social-icon{
+    margin:20px 10px;
+}
+
+/* Testimonial */
+#testimonials {
+    text-align: center;
+    background-color: #ef8172;
+}
+
+#testimonials h2{
+    color: #fff;
+    font-size: 2.5rem;
+}
+.testimonial-img{
+    width: 10%;
+    border-radius: 100%;
+    margin: 20px;
+}
+.carousel-item{
+    padding: 7% 15%;
+}
+/* Press  */
+#press{
+    background-color: #ef8172;
+    text-align: center;
+    padding-bottom: 3% ;
+}
+
+.press-logo{
+    width: 15%;
+    margin: 20px 20px 50px;
+}
+
+/* Pricing */
+#pricing{
+    padding: 100px;
+    text-align: center;
+}
+#pricing h2{
+    font-family: 'Montserrat';
+    font-weight: bold;
+    font-size: 2.5rem;
+}
+.pricing-col{
+    padding: 3% 2%;
+}
+/* CTA */
+
+#cta{
+    background-color: #ff4c68;
+    padding: 7% 15%;
+    text-align: center;
+    
+}
+#cta h3{
+    font-family: 'Montserrat';
+    font-weight: bold;
+    font-size: 3.5rem;
+    color: #fff;
+    line-height: 1.5;
+}
+/* Footer Section */
+footer{
+    padding: 7% 15% 3%;
+    text-align: center;
+}
+/* Media Query for small screens */
+@media (max-width:990px){
+
+    #title{
+        text-align: center;
+    }
+
+    .nav-item{
+        text-align: right;
+    }
+    .title-img{
+        position: static;
+        transform: rotate(0);
+    }
+}
