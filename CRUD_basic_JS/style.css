@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Ubuntu&display=swap');
+
+body{
+    font-family: 'Ubuntu', sans-serif;
+    margin: 50px 50px;
+    background-color:#c2e9fc;
+    color: black;
+}
+h1 {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 48px;
+}
+.container{
+    display: flex;
+    max-width: 1100px;
+    gap: 160px;
+    justify-content: center;
+    margin: auto;
+    margin-top: 50px;
+    border: 2px solid grey;
+    padding: 50px;
+    border-radius: 20px;
+    background-color:aliceblue;
+}
+#msg {
+    color: red;
+    margin-bottom: 10px;
+}
+#posts {
+    width: 400px;
+}
+#posts div{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+h3{
+    font-size: 24px;
+}
+label{
+    font-size: 20px;
+    font-weight: bold;
+}
+button{
+    font-size: 18px;
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 15px;
+    width: 80px;
+    font-weight: bold;
+    background-color: gainsboro;
+}
+button:hover{
+    color: black;
+    background-color: gray;
+}
+textarea{
+    border: 1px solid gray;
+    border-radius: 10px;
+}
+.options{
+    display: flex;
+    gap: 15px;
+}
+i {
+    cursor: pointer;
+}
+i:hover{
+    color: darkgray;
+}
+
+@media (max-width: 900px){
+    body{
+        margin: 40px auto;
+    }
+    .container {
+        flex-direction: column;
+        gap: 20px;
+        width: 270px;
+        justify-content: center;
+    }
+    h1{
+        font-size: 32px;
+        text-align: center;
+    }
+    .left{
+        width: 270px;
+    }
+    .right{
+        width: 270px;
+        justify-self: unset;
+    }
+    #posts div{
+        justify-content: flex-start;
+        
+    }
+    .options{
+        margin-left: 80px;
+    }
+}
