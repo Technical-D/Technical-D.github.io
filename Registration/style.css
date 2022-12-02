@@ -34,3 +34,11 @@ input{
     color: white;
     text-decoration: none;
 }
+@media(max-width: 600px){
+    
+.form-login{
+    padding: 5px;
+    margin: 46px 10px;
+
+}
+}
