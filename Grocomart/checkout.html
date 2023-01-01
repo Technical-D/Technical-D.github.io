@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/f6f8f493f3.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <section class="checkout">
+        <div class="box-container">
+        <div class="box-1">
+            <a href="cart.html" class="btn"><i class="fa-solid fa-arrow-left-long" style="margin-right: .8rem;"></i>Back to cart</a>
+            <h3 class="heading">Order Summary</h3>
+            <div class="items">
+                <div class="row" style="font-weight: bold;">
+                    <p>product</p>
+                    <p>name</p>
+                    <p>price</p>
+                    <p>quantity</p>
+                </div>
+                <hr>
+                <div class="row">
+                    <img src="images/almond.png" alt="" height="50rem" width="50rem">
+                    <p>almond</p>
+                    <p>$25</p>
+                    <p><span>x</span>3</p>
+                </div>
+                <div class="row">
+                    <img src="images/almond.png" alt="" height="50rem" width="50rem">
+                    <p>almond</p>
+                    <p>$25</p>
+                    <p><span>x</span>3</p>
+                </div>
+                <div class="row">
+                    <img src="images/almond.png" alt="" height="50rem" width="50rem">
+                    <p>almond</p>
+                    <p>$25</p>
+                    <p><span>x</span>3</p>
+                </div>
+            </div>
+            <div class="end">
+                <p><span>Items:</span> 9</p>
+                <p><span>Order total:</span> $1000</p>
+            </div>
+            
+        </div>
+        <div class="box-2">
+                <div class="shipping-form">
+                <h3 class="heading">Shipping Address</h3>
+
+                    <form action="">
+                            <div>
+                                <input class="inputBox" type="text" placeholder="Address" required>
+                            <input class="inputBox" type="text" placeholder="Landmark" required>
+
+                            <select class="inputBox" name="state" id="state" required>
+                                <option value="">select state</option>
+                                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                <option value="Assam">Assam</option>
+                                <option value="Bihar">Bihar</option>
+                                <option value="Chandigarh">Chandigarh</option>
+                                <option value="Chhattisgarh">Chhattisgarh</option>
+                                <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                                <option value="Daman and Diu">Daman and Diu</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Lakshadweep">Lakshadweep</option>
+                                <option value="Puducherry">Puducherry</option>
+                                <option value="Goa">Goa</option>
+                                <option value="Gujarat">Gujarat</option>
+                                <option value="Haryana">Haryana</option>
+                                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                <option value="Jharkhand">Jharkhand</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Kerala">Kerala</option>
+                                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Manipur">Manipur</option>
+                                <option value="Meghalaya">Meghalaya</option>
+                                <option value="Mizoram">Mizoram</option>
+                                <option value="Nagaland">Nagaland</option>
+                                <option value="Odisha">Odisha</option>
+                                <option value="Punjab">Punjab</option>
+                                <option value="Rajasthan">Rajasthan</option>
+                                <option value="Sikkim">Sikkim</option>
+                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                <option value="Telangana">Telangana</option>
+                                <option value="Tripura">Tripura</option>
+                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                <option value="Uttarakhand">Uttarakhand</option>
+                                <option value="West Bengal">West Bengal</option>
+                                </select>
+                            <input class="inputBox" type="text" placeholder="city" required>
+                            <input class="inputBox" type="number" placeholder="Pin code" required>
+                            <input type="submit" class="btn" value="Submit">
+                            </div>
+                    </form>
+                </div>
+                <div class="payment">
+                    <h3 class="heading">Payment</h3>
+                    <button class="btn">Payment</button>
+                </div>
+        </div>
+        </div>
+        
+    </section>
+
+    <style>
+        .checkout .box-container{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 3rem;
+        }
+        .checkout .box-container .box-1{
+            border: 0.1rem solid rgba(0,0,0,.3);
+            width: 50%;
+            padding: 2rem;
+            border-radius: .5rem;   
+            /* box-shadow: var(--shadow); */
+
+        }
+        .checkout .box-container .box-2{
+            width: 50%;
+        }
+        .checkout .box-container .box-1 .heading{
+            font-size: 2.7rem;
+            margin: 1rem 0 2rem;
+            text-align: start;
+            padding: 0;
+        }
+        .checkout .box-container .box-1 .btn{
+            font-size:1.5rem ;
+            margin: 1rem 0;
+            padding: 1rem;
+        }
+        .checkout .box-container .box-1 .items {
+            border-radius: .5rem;
+            border: 0.1rem solid rgba(0,0,0,.3);
+        }
+        .checkout .box-container .box-1 .items .row{
+            display: grid;
+            grid-template-columns:repeat(4, 22%);
+            gap: 2rem;
+            text-align: center;
+            background-color: #f5f5f5;
+            padding: 1rem 3rem;
+            font-size: 1.5rem;
+            border-radius: .5rem;
+        }
+        .checkout .box-container .box-1 .items .row p{
+            margin: auto 0;
+            font-size: 1.5rem;
+        }
+        .checkout .box-container .box-1 .items .row span{
+            font-size: 1.2rem;
+            color: gray;
+            font-weight: bold;
+            margin-right: .3rem;
+        }
+        .checkout .box-container .box-1 .items hr{
+            border-top: 1px solid var(--dark);
+        }
+        .checkout .box-container .box-1 .end{
+            margin: 2rem 0;
+            font-size: 1.7rem;
+        }
+        .checkout .box-container .box-1 .end span{
+            font-weight: bold;
+        }
+        .checkout .box-container .box-2 .shipping-form .heading{
+            font-size: 2.7rem;
+            text-align: start;
+        }
+        .checkout .box-container .box-2 .shipping-form{
+            border: 0.1rem solid rgba(0,0,0,.3);
+            width: 100%;
+            margin: 0;
+            padding: 2rem;
+            text-align: center;
+            border-radius: .5rem;
+            
+        }
+        .checkout .box-container .box-2 .shipping-form .inputBox{
+            font-size: 1.5rem;
+            background-color: #f5f5f5;
+            padding: 1rem ;
+            margin: .5rem 0;
+            border: 0.1rem solid rgba(0,0,0,.3);
+            border-radius: .8rem;
+            width: 100%;
+        }
+        .checkout .box-container .box-2 .shipping-form .btn{
+            margin: 1rem auto;
+        }
+        .checkout .box-container .box-2 .payment{
+            text-align: center;
+            margin: 2rem 0;
+            text-align: center;
+            border: 0.1rem solid rgba(0,0,0,.3);
+            padding: 2rem;
+            border-radius: .5rem;
+        }
+        .checkout .box-container .box-2 .payment .heading{
+            font-size: 2.7rem;
+        }
+        @media(max-width:650px){
+            .checkout .box-container{
+                flex-direction: column;
+            }
+            .checkout .box-container .box-1 , .checkout .box-container .box-2{
+                width: 100%;
+            }
+            .checkout .box-container .box-1 .items .row{
+                font-size: 35%;
+                padding-left: 1.5rem;
+            }
+            .checkout .box-container .box-1 img{
+                width: 75%;
+                height: 75%;
+            }
+}
+
+
+    </style>
+</body>
+</html>

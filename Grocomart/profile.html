@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Profile section -->
+    <section class="profile">
+        <h1 class="heading">Account <span>Information</span></h1>
+        <hr>
+        <div class="box-container">
+            <div class="personal">
+                <h1 class="heading">Personal <span>Information</span></h1>
+                <div class="p_info">
+                    <div><img src="images/man.png" alt=""></div>
+                    <div>
+                        <p><span>Dheeraj Gupta</span></p>
+                        <p class="e"><span>Email: </span>dheerajgupta@1902@gmail.com</p>
+                        <p><span>Mobile: </span>9137888650</p>
+                    </div>
+                </div>
+                <hr>
+            <div class="second">
+                <div class="address">
+                    <h1 class="heading">Address <span>details</span></h1>
+                    <div>
+                        <p><span>Primary Address</span></p>
+                        <p>Ambedkar Society</p>
+                        <p>Varsha Nagar</p>
+                        <p>Vikhroli</p>
+                        <p>Maharashtra</p>
+                        <p>Mumbai</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="order">
+                    <h1 class="heading">Order <span>Details</span></h1>
+                    <div class="tb">
+                        <div class="r">
+                            <p>order id</p>
+                            <p>Trasaction id</p>
+                            <p>Status</p>
+                            <p>delivered</p>
+                        </div>
+
+                        <div class="r">
+                            <p>1</p>
+                            <p>585858585854</p>
+                            <p>complete</p>
+                            <p>yes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </section>
+    <style>
+        .profile hr{
+            border: 1px solid var(--green);
+            margin: 2rem auto;
+            width: 90%;
+        }
+        .profile .box-container .heading{
+            margin: 0;
+            padding: 1rem 0;
+            font-size: 3rem;
+        }
+        .profile .box-container .personal .p_info{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .profile .box-container .personal .p_info  img{
+            width: 20rem;
+            height: 20rem;
+        }
+        .profile .box-container .personal .p_info div p{
+            font-size: 2rem;
+            text-align: center;
+        }
+        .profile .box-container .personal .p_info div p span{
+            font-weight: bold;
+        }
+        .profile .box-container .personal .p_info div .e{
+            text-transform: lowercase;
+        }
+        .profile .box-container .personal .address{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .profile .box-container .personal .address div{
+            text-align: start;
+            font-size: 1.8rem;
+        }
+        .profile .box-container .personal .address div span{
+            font-weight: bold;
+            font-size: 2.2rem;
+        }
+        .profile .box-container .second{
+            display: flex;
+            justify-content: center;
+            gap: 20%;
+        }
+        .profile .box-container .second .order .r{
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin: 1rem 0;
+            font-size: 1.8rem;
+            padding: .5rem;
+        }
+        .profile .box-container .second .order .r p{
+            margin: auto;
+        }
+        .profile .box-container .second .order .r:first-child{
+            border: 1px solid var(--dark);
+        }
+        .profile .box-container .second hr{
+            display: none;
+        }
+        @media(max-width:850px){
+            .profile .box-container .second{
+                flex-direction: column;
+            }
+            .profile .box-container .second hr{
+                display: block;
+        }
+        .profile .box-container .second .order {
+            width: 85%;
+            margin: auto;
+        }
+
+        }
+    </style>
+</body>
+</html>
