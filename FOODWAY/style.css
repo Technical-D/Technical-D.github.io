@@ -12,6 +12,10 @@ hr{
     border-top-style: dotted;
     background-color: transparent;
 }
+::selection{
+    color: #fff;
+    background-color: brown;
+}
 .container-fluid{
     margin:0 5% 0;
     
@@ -161,6 +165,16 @@ hr{
 }
 .social-icon:hover{
     color: brown;
+}
+
+
+#menu .card{
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+    
+}
+#menu .card img{
+    width: 100px;
+    height: 100px;
 }
 /* For Small screen */
 @media(max-width:760px){
