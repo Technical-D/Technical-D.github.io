@@ -1,0 +1,143 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.home {
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+h1 {
+    font-size: 3em;
+    color: #333;
+    margin-bottom: 0;
+}
+p {
+    font-size: 1.2em;
+    color: #555;
+    margin-top: 10px;
+}
+.image-container img {
+    width: 100%;
+    max-width: 300px;
+}
+.get-started-btn-link {
+    text-decoration: none; 
+}
+
+.get-started-btn {
+    background-color: #07d17c; 
+    color: white;
+    font-size: 1.2em;
+    padding: 15px 32px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.get-started-btn:hover {
+    background-color: #4CAF50; 
+}
+.parseResume {
+    margin: 20px 0;
+    padding: 10px 50px;
+    width: 80%;
+}
+.parseResume h3{
+    color: #333;
+}
+.upload-box {
+    margin: 20px 0;
+    text-align: center;
+    padding: 20px;
+    border: 2px dashed #07d17c;
+    border-radius: 8px;
+    background-color: #ecf0f1;
+    width: fit-content;
+}
+.upload-box input {
+    font-size: 1em;
+    padding: 10px;
+    background-color: #07d17c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.upload-box input:hover {
+    background-color: #4CAF50;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+label {
+    font-size: 1.1em;
+    display: block;
+    margin-bottom: 5px;
+    color: #2c3e50;
+}
+input, select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.2em;
+    color: white;
+    background-color: #07d17c;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: fit-content;
+}
+button:hover {
+    background-color: #4CAF50;
+}
+#confirmationMessage {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.5em;
+    color: #4CAF50; 
+    height: 100vh;
+}
+
+ .loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(3px);
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    z-index: 999;
+}
+
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.3);
+    border-top: 6px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
