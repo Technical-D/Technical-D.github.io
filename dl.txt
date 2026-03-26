@@ -1,0 +1,669 @@
+DEEP LEARNING PRACTICALS (P1–P7)
+
+--------------------------------------------------
+P1: Implement Feed-forward Neural Network and train the network with different optimizers and compare the results.
+--------------------------------------------------
+
+A feed-forward neural network passes data in one direction from input to output through hidden layers. Here we build the same model three times, each trained with a different optimizer (SGD, Adam, RMSprop), and compare their validation accuracies to see which one converges faster and performs better.
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import SGD, Adam, RMSprop
+
+X, y = make_classification(
+    n_samples=1000,
+    n_features=20,
+    n_informative=15,
+    n_redundant=5,
+    n_classes=2,
+    random_state=42
+)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+def create_model():
+    model = Sequential([
+        Dense(32, activation='relu', input_shape=(X_train.shape[1],)),
+        Dense(16, activation='relu'),
+        Dense(1, activation='sigmoid')
+    ])
+    return model
+
+optimizers = {
+    'SGD': SGD(learning_rate=0.01),
+    'Adam': Adam(learning_rate=0.01),
+    'RMSprop': RMSprop(learning_rate=0.01)
+}
+
+results = {}
+
+for optimizer_name, optimizer in optimizers.items():
+    print(f"Training with {optimizer_name} optimizer...")
+
+    model = create_model()
+    model.compile(
+        optimizer=optimizer,
+        loss='binary_crossentropy',
+        metrics=['accuracy']
+    )
+
+    history = model.fit(
+        X_train, y_train,
+        epochs=50,
+        batch_size=32,
+        verbose=0,
+        validation_split=0.2
+    )
+
+    test_loss, test_accuracy = model.evaluate(X_test, y_test, verbose=0)
+
+    results[optimizer_name] = {
+        'history': history,
+        'test_accuracy': test_accuracy
+    }
+
+    print(f"{optimizer_name} Test Accuracy: {test_accuracy:.4f}\n")
+
+plt.figure(figsize=(12, 6))
+
+for optimizer_name, result in results.items():
+    plt.plot(
+        result['history'].history['val_accuracy'],
+        label=f'{optimizer_name} (Validation Accuracy)'
+    )
+
+plt.title('Optimizer Comparison')
+plt.xlabel('Epochs')
+plt.ylabel('Validation Accuracy')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+for optimizer_name, result in results.items():
+    print(f"{optimizer_name} Final Test Accuracy: {result['test_accuracy']:.4f}")
+
+--------------------------------------------------
+P2: Write a Program to implement regularization to prevent the model from overfitting.
+--------------------------------------------------
+
+Overfitting happens when a model learns noise in the training data instead of the actual pattern. Regularization techniques like L2 weight penalty and Dropout (randomly disabling neurons during training) force the model to generalize better, which we verify by comparing training and validation loss curves.
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.regularizers import l2
+
+X, y = make_classification(
+    n_samples=1000,
+    n_features=20,
+    n_informative=15,
+    n_redundant=5,
+    n_classes=2,
+    random_state=42
+)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+def create_regularized_model():
+    model = Sequential([
+        Dense(32, activation='relu',
+              input_shape=(X_train.shape[1],),
+              kernel_regularizer=l2(0.01)),
+        Dropout(0.5),
+
+        Dense(16, activation='relu',
+              kernel_regularizer=l2(0.01)),
+        Dropout(0.5),
+
+        Dense(1, activation='sigmoid')
+    ])
+    return model
+
+model = create_regularized_model()
+model.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
+
+history = model.fit(
+    X_train, y_train,
+    epochs=50,
+    batch_size=32,
+    validation_split=0.2,
+    verbose=0
+)
+
+test_loss, test_accuracy = model.evaluate(X_test, y_test, verbose=0)
+print(f"Test Accuracy: {test_accuracy:.4f}")
+
+plt.figure(figsize=(12, 6))
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+
+plt.title('Training and Validation Loss with Regularization')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.grid(True)
+
+plt.show()
+
+--------------------------------------------------
+P3: Implement deep learning for recognizing classes for datasets like CIFAR-10 images.
+--------------------------------------------------
+
+CIFAR-10 contains 60,000 color images across 10 classes (airplane, car, bird, etc.). We build a Convolutional Neural Network (CNN) that uses Conv2D layers to automatically extract spatial features like edges and textures from images, and then classifies them into one of the 10 categories.
+
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.datasets import cifar10
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+(X_train, y_train), (X_test, y_test) = cifar10.load_data()
+
+X_train = X_train.astype('float32') / 255.0
+X_test = X_test.astype('float32') / 255.0
+
+y_train = to_categorical(y_train, 10)
+y_test = to_categorical(y_test, 10)
+
+def create_cnn_model():
+    model = Sequential([
+        Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
+        MaxPooling2D((2, 2)),
+
+        Conv2D(64, (3, 3), activation='relu'),
+        MaxPooling2D((2, 2)),
+
+        Conv2D(128, (3, 3), activation='relu'),
+        Flatten(),
+
+        Dense(128, activation='relu'),
+        Dropout(0.5),
+
+        Dense(10, activation='softmax')
+    ])
+    return model
+
+model = create_cnn_model()
+
+model.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+history = model.fit(
+    X_train, y_train,
+    epochs=20,
+    batch_size=64,
+    validation_data=(X_test, y_test)
+)
+
+plt.figure(figsize=(12, 6))
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+
+plt.title('Training and Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+class_names = [
+    "airplane","automobile","bird","cat","deer",
+    "dog","frog","horse","ship","truck"
+]
+
+plt.figure(figsize=(10, 10))
+
+for i in range(9):
+    plt.subplot(3, 3, i + 1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(X_test[i])
+
+    pred = np.argmax(model.predict(X_test[i:i+1], verbose=0))
+    true = np.argmax(y_test[i])
+
+    plt.xlabel(f"Pred: {class_names[pred]}\nTrue: {class_names[true]}")
+
+plt.show()
+
+--------------------------------------------------
+P4: Implement deep learning for the Prediction of the autoencoder from the test data (MNIST).
+--------------------------------------------------
+
+An autoencoder is an unsupervised neural network that learns to compress (encode) input data into a smaller representation and then reconstruct (decode) it back. Here we train it on MNIST handwritten digits so the network learns the essential features of each digit, and we visually compare original vs reconstructed images.
+
+import tensorflow as tf
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input, Dense
+from tensorflow.keras.datasets import mnist
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+(X_train, _), (X_test, _) = mnist.load_data()
+
+X_train = X_train.astype('float32') / 255.0
+X_test = X_test.astype('float32') / 255.0
+
+X_train = X_train.reshape((X_train.shape[0], -1))
+X_test = X_test.reshape((X_test.shape[0], -1))
+
+input_dim = X_train.shape[1]
+encoding_dim = 64
+
+input_img = Input(shape=(input_dim,))
+encoded = Dense(encoding_dim, activation='relu')(input_img)
+
+decoded = Dense(input_dim, activation='sigmoid')(encoded)
+
+autoencoder = Model(inputs=input_img, outputs=decoded)
+
+autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
+
+history = autoencoder.fit(
+    X_train, X_train,
+    epochs=20,
+    batch_size=256,
+    shuffle=True,
+    validation_split=0.2,
+    verbose=1
+)
+
+encoded_imgs = tf.keras.Model(input_img, encoded).predict(X_test)
+decoded_imgs = autoencoder.predict(X_test)
+
+decoded_imgs = decoded_imgs.reshape(-1, 28, 28)
+
+n = 10
+plt.figure(figsize=(20, 4))
+
+for i in range(n):
+    plt.subplot(2, n, i + 1)
+    plt.imshow(X_test[i].reshape(28, 28), cmap='gray')
+    plt.title("Original")
+    plt.axis('off')
+
+    plt.subplot(2, n, i + 1 + n)
+    plt.imshow(decoded_imgs[i], cmap='gray')
+    plt.title("Reconstructed")
+    plt.axis('off')
+
+plt.show()
+
+plt.figure(figsize=(12, 6))
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+
+plt.title('Training and Validation Loss of Autoencoder')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.grid(True)
+
+plt.show()
+
+--------------------------------------------------
+P5: Implement CNN for Digit Recognition on MNIST Dataset.
+--------------------------------------------------
+
+This practical builds a Convolutional Neural Network to classify handwritten digits (0-9) from the MNIST dataset. The CNN applies convolutional filters to detect patterns like edges and curves in the 28x28 grayscale images, then uses dense layers to map those features to the correct digit class.
+
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras.utils import to_categorical
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
+
+X_train = X_train.astype('float32') / 255.0
+X_test = X_test.astype('float32') / 255.0
+
+X_train = X_train.reshape(-1, 28, 28, 1)
+X_test = X_test.reshape(-1, 28, 28, 1)
+
+y_train = to_categorical(y_train, 10)
+y_test = to_categorical(y_test, 10)
+
+def create_model():
+    model = Sequential([
+        Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+        MaxPooling2D((2, 2)),
+
+        Conv2D(64, (3, 3), activation='relu'),
+        MaxPooling2D((2, 2)),
+
+        Flatten(),
+
+        Dense(128, activation='relu'),
+        Dropout(0.5),
+
+        Dense(10, activation='softmax')
+    ])
+    return model
+
+model = create_model()
+
+model.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+history = model.fit(
+    X_train, y_train,
+    epochs=10,
+    batch_size=64,
+    validation_split=0.2,
+    verbose=1
+)
+
+test_loss, test_accuracy = model.evaluate(X_test, y_test, verbose=0)
+print(f"Test Accuracy: {test_accuracy:.4f}")
+
+plt.figure(figsize=(12, 6))
+plt.plot(history.history['accuracy'], label='Training Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+
+plt.title('Training vs Validation Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+plt.figure(figsize=(10, 10))
+
+for i in range(9):
+    plt.subplot(3, 3, i + 1)
+    plt.imshow(X_test[i].reshape(28, 28), cmap='gray')
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+
+    pred = np.argmax(model.predict(X_test[i:i+1], verbose=0))
+    true = np.argmax(y_test[i])
+
+    plt.xlabel(f"Pred: {pred}, True: {true}")
+
+plt.show()
+
+--------------------------------------------------
+P6: Transfer Learning using MobileNetV2 (Cats vs Dogs).
+--------------------------------------------------
+
+Transfer learning reuses a model (MobileNetV2) already trained on millions of ImageNet images, freezes its learned feature layers, and adds a small custom classifier on top for a new task. This lets us achieve high accuracy on Cats vs Dogs classification with very little training data and time.
+
+import kagglehub
+import tensorflow as tf
+import matplotlib.pyplot as plt
+import os
+
+from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
+from tensorflow.keras.models import Model
+
+path = kagglehub.dataset_download("shaunthesheep/microsoft-catsvsdogs-dataset")
+print("Dataset downloaded at:", path)
+
+data_dir = os.path.join(path, "PetImages")
+
+IMG_SIZE = (224, 224)
+BATCH_SIZE = 32
+
+train_ds = tf.keras.utils.image_dataset_from_directory(
+    data_dir,
+    validation_split=0.2,
+    subset="training",
+    seed=123,
+    image_size=IMG_SIZE,
+    batch_size=BATCH_SIZE
+)
+
+val_ds = tf.keras.utils.image_dataset_from_directory(
+    data_dir,
+    validation_split=0.2,
+    subset="validation",
+    seed=123,
+    image_size=IMG_SIZE,
+    batch_size=BATCH_SIZE
+)
+
+normalization_layer = tf.keras.layers.Rescaling(1./255)
+
+train_ds = train_ds.map(lambda x, y: (normalization_layer(x), y))
+val_ds = val_ds.map(lambda x, y: (normalization_layer(x), y))
+
+train_ds = train_ds.apply(tf.data.experimental.ignore_errors())
+val_ds = val_ds.apply(tf.data.experimental.ignore_errors())
+
+train_ds = train_ds.prefetch(buffer_size=tf.data.AUTOTUNE)
+val_ds = val_ds.prefetch(buffer_size=tf.data.AUTOTUNE)
+
+base_model = MobileNetV2(
+    weights='imagenet',
+    include_top=False,
+    input_shape=(224, 224, 3)
+)
+
+for layer in base_model.layers:
+    layer.trainable = False
+
+x = base_model.output
+x = GlobalAveragePooling2D()(x)
+x = Dense(128, activation='relu')(x)
+output = Dense(1, activation='sigmoid')(x)
+
+model = Model(inputs=base_model.input, outputs=output)
+
+model.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
+
+history = model.fit(
+    train_ds,
+    validation_data=val_ds,
+    epochs=5
+)
+
+plt.figure(figsize=(10, 5))
+plt.plot(history.history['accuracy'], label='Training Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+
+plt.title("Model Accuracy")
+plt.xlabel("Epoch")
+plt.ylabel("Accuracy")
+plt.legend()
+plt.grid(True)
+
+plt.show()
+
+--------------------------------------------------
+P7: Implement GAN for generating synthetic digits.
+--------------------------------------------------
+
+A Generative Adversarial Network (GAN) consists of two networks competing against each other — a Generator that creates fake images from random noise, and a Discriminator that tries to distinguish real images from fake ones. Through this adversarial training on MNIST, the Generator gradually learns to produce realistic-looking handwritten digits.
+
+import tensorflow as tf
+import matplotlib.pyplot as plt
+import numpy as np
+import time
+from tensorflow.keras import layers
+from IPython import display
+
+(train_images, _), (_, _) = tf.keras.datasets.mnist.load_data()
+
+train_images = train_images.reshape(train_images.shape[0], 28, 28, 1).astype('float32')
+train_images = (train_images - 127.5) / 127.5
+
+BUFFER_SIZE = 60000
+BATCH_SIZE = 256
+
+train_dataset = tf.data.Dataset.from_tensor_slices(train_images) \
+    .shuffle(BUFFER_SIZE) \
+    .batch(BATCH_SIZE)
+
+def make_generator_model():
+    model = tf.keras.Sequential([
+        layers.Dense(7 * 7 * 256, use_bias=False, input_shape=(100,)),
+        layers.BatchNormalization(),
+        layers.LeakyReLU(),
+
+        layers.Reshape((7, 7, 256)),
+
+        layers.Conv2DTranspose(128, (5, 5), strides=(1, 1),
+                               padding='same', use_bias=False),
+        layers.BatchNormalization(),
+        layers.LeakyReLU(),
+
+        layers.Conv2DTranspose(64, (5, 5), strides=(2, 2),
+                               padding='same', use_bias=False),
+        layers.BatchNormalization(),
+        layers.LeakyReLU(),
+
+        layers.Conv2DTranspose(1, (5, 5), strides=(2, 2),
+                               padding='same', use_bias=False,
+                               activation='tanh')
+    ])
+    return model
+
+generator = make_generator_model()
+
+def make_discriminator_model():
+    model = tf.keras.Sequential([
+        layers.Conv2D(64, (5, 5), strides=(2, 2),
+                      padding='same', input_shape=(28, 28, 1)),
+        layers.LeakyReLU(),
+        layers.Dropout(0.3),
+
+        layers.Conv2D(128, (5, 5), strides=(2, 2),
+                      padding='same'),
+        layers.LeakyReLU(),
+        layers.Dropout(0.3),
+
+        layers.Flatten(),
+        layers.Dense(1)
+    ])
+    return model
+
+discriminator = make_discriminator_model()
+
+cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+
+def discriminator_loss(real_output, fake_output):
+    real_loss = cross_entropy(tf.ones_like(real_output), real_output)
+    fake_loss = cross_entropy(tf.zeros_like(fake_output), fake_output)
+    return real_loss + fake_loss
+
+def generator_loss(fake_output):
+    return cross_entropy(tf.ones_like(fake_output), fake_output)
+
+generator_optimizer = tf.keras.optimizers.Adam(1e-4)
+discriminator_optimizer = tf.keras.optimizers.Adam(1e-4)
+
+EPOCHS = 10
+noise_dim = 100
+num_examples_to_generate = 16
+
+seed = tf.random.normal([num_examples_to_generate, noise_dim])
+
+@tf.function
+def train_step(images):
+    noise = tf.random.normal([tf.shape(images)[0], noise_dim])
+
+    with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
+        generated_images = generator(noise, training=True)
+
+        real_output = discriminator(images, training=True)
+        fake_output = discriminator(generated_images, training=True)
+
+        gen_loss = generator_loss(fake_output)
+        disc_loss = discriminator_loss(real_output, fake_output)
+
+    gradients_of_generator = gen_tape.gradient(gen_loss, generator.trainable_variables)
+    gradients_of_discriminator = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
+
+    generator_optimizer.apply_gradients(
+        zip(gradients_of_generator, generator.trainable_variables)
+    )
+    discriminator_optimizer.apply_gradients(
+        zip(gradients_of_discriminator, discriminator.trainable_variables)
+    )
+
+def generate_and_save_images(model, epoch, test_input):
+    predictions = model(test_input, training=False)
+
+    fig = plt.figure(figsize=(5, 5))
+
+    for i in range(predictions.shape[0]):
+        plt.subplot(4, 4, i + 1)
+
+        img = (predictions[i, :, :, 0] + 1) / 2.0
+        plt.imshow(img, cmap='gray')
+
+        plt.axis('off')
+
+    plt.suptitle(f"Epoch {epoch}")
+    plt.tight_layout()
+    plt.show()
+
+def train(dataset, epochs):
+    for epoch in range(epochs):
+        start = time.time()
+
+        for image_batch in dataset:
+            train_step(image_batch)
+
+        display.clear_output(wait=True)
+
+        if (epoch + 1) % 5 == 0:
+            generate_and_save_images(generator, epoch + 1, seed)
+
+        print(f"Time for epoch {epoch+1} is {time.time()-start:.2f} sec")
+
+    display.clear_output(wait=True)
+    generate_and_save_images(generator, epochs, seed)
+
+train(train_dataset, EPOCHS)
