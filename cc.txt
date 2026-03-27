@@ -1,0 +1,307 @@
+================================================
+  PRACTICAL 01 - Simple MVC Web Application
+  Project: MVC_Demo_Project
+  Server: GlassFish 4.1.1 | Java EE 7 Web
+================================================
+
+--- StudentModel.java (Source Packages > model > Java Class) ---
+
+public class StudentModel {
+    public String getMessage() {
+        return "Welcome to MVC Web Application";
+    }
+}
+
+
+--- StudentController.java (Source Packages > controller > Servlet) ---
+
+    StudentModel model = new StudentModel();
+    String msg = model.getMessage();
+
+    request.setAttribute("message", msg);
+
+    RequestDispatcher rd = request.getRequestDispatcher("view.jsp");
+    rd.forward(request, response);
+
+
+--- view.jsp (Web Pages > New > JSP > "view") ---
+
+<html>
+<head>
+    <title>MVC Demo</title>
+</head>
+<body>
+    <h2>MVC Example</h2>
+    <h3>${message}</h3>
+</body>
+</html>
+
+
+Run: http://localhost:8080/MVC_Demo_Project/StudentController
+
+
+================================================
+  PRACTICAL 02 - Cloud-Style MVC Web App
+  Project: MVCCloudApp
+  Server: GlassFish 4.1.1 | Java EE 7 Web
+================================================
+
+--- Student.java (Source Packages > model > Java Class) ---
+
+private String name;
+private String course;
+
+public String getName() { return name; }
+public void setName(String name) { this.name = name; }
+
+public String getCourse() { return course; }
+public void setCourse(String course) { this.course = course; }
+
+
+--- StudentController.java (Source Packages > controller > Servlet, URL Pattern: /Student) ---
+
+    String name = request.getParameter("name");
+    String course = request.getParameter("course");
+
+    Student s = new Student();
+    s.setName(name);
+    s.setCourse(course);
+
+    request.setAttribute("student", s);
+
+    RequestDispatcher rd = request.getRequestDispatcher("view.jsp");
+    rd.forward(request, response);
+
+
+--- index.jsp (Web Pages > New > JSP > "index") ---
+
+<h2>Student Registration</h2>
+<form action="Student" method="post">
+    Name: <input type="text" name="name"><br><br>
+    Course: <input type="text" name="course"><br><br>
+    <input type="submit" value="Submit">
+</form>
+
+
+--- view.jsp (Web Pages > New > JSP > "view") ---
+
+<%@ page import="model.Student" %>
+<h2>Student Details</h2>
+<%
+    Student s = (Student) request.getAttribute("student");
+%>
+Name: <%= s.getName() %><br>
+Course: <%= s.getCourse() %>
+
+
+Run: http://localhost:8080/MVCCloudApp/
+
+
+================================================
+  PRACTICAL 03 - Guest Book Web Application
+  Project: GuestBookApp
+  Server: GlassFish 4.1.1 | Java EE 7 Web
+================================================
+
+--- Guest.java (Source Packages > model > Java Class) ---
+
+String name;
+String message;
+
+public String getName() { return name; }
+public void setName(String name) { this.name = name; }
+
+public String getMessage() { return message; }
+public void setMessage(String message) { this.message = message; }
+
+
+--- GuestController.java (Source Packages > controller > Servlet, URL Pattern: /GuestController) ---
+
+    ArrayList<Guest> guestList = (ArrayList<Guest>) request.getSession().getAttribute("guests");
+
+    if (guestList == null) {
+        guestList = new ArrayList<>();
+    }
+
+    String name = request.getParameter("name");
+    String message = request.getParameter("message");
+
+    Guest guest = new Guest();
+    guest.setName(name);
+    guest.setMessage(message);
+    guestList.add(guest);
+
+    request.getSession().setAttribute("guests", guestList);
+    request.setAttribute("guests", guestList);
+
+    RequestDispatcher rd = request.getRequestDispatcher("view.jsp");
+    rd.forward(request, response);
+
+
+--- view.jsp (Web Pages > New > JSP > "view") ---
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.*, model.Guest"%>
+
+<h1>Guest Book</h1>
+
+<form action="GuestController" method="post">
+    <label>Name: </label>
+    <input type="text" name="name" /> <br>
+    <label>Message </label>
+    <input type="text" name="message" /> <br>
+    <input type="submit" value="Add Guests">
+</form>
+
+<br><hr>
+<h3>Guest List</h3>
+
+<%
+List guests = (List) request.getAttribute("guests");
+if (guests != null) {
+    for (Object obj : guests) {
+        Guest g = (Guest) obj;
+%>
+<p><b><%= g.getName() %>:</b> <%= g.getMessage() %></p>
+<%
+    }
+}
+%>
+
+
+Run: http://localhost:8080/GuestBookApp/view.jsp
+
+
+================================================
+  PRACTICAL 04 - Cloud Foundry CLI
+  (No code files - Command line steps only)
+================================================
+
+Step 1: Download cf8-cli-winx64.zip from
+        https://github.com/cloudfoundry/cli/releases
+        Extract to C:\cf
+
+Step 2: Add C:\cf to System Environment Variable > Path
+
+Step 3: Open CMD, run:
+        cf --version
+
+Step 4: Explore commands:
+        cf help
+        cf help login
+        cf help api
+        cf help apps
+        cf help services
+
+Step 5: Set API endpoint:
+        cf api https://api.cf.us10.hana.ondemand.com
+
+
+================================================
+  PRACTICAL 05 - DaaS (Netlify Deployment)
+  (3 files in one folder, deploy on Netlify)
+================================================
+
+--- index.html ---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Netlify Website</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Welcome to My Website!</h1>
+    <p>This is a simple static website deployed on Netlify.</p>
+    <button onclick="showMessage()">Click Me!</button>
+    <p id="message"></p>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+--- styles.css ---
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    text-align: center;
+    margin: 50px;
+}
+h1 { color: #4CAF50; font-size: 2.5em; }
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover { background-color: #45a049; }
+
+
+--- script.js ---
+
+function showMessage() {
+    document.getElementById("message").innerText = "Button Clicked! Welcome to Netlify!";
+}
+
+
+Steps:
+1. Go to https://app.netlify.com > Sign up
+2. Dashboard > Add new site > Deploy manually
+3. Drag & drop the folder with above 3 files
+4. Open the generated URL to test
+
+
+================================================
+  PRACTICAL 06 - SaaS (Dropbox API with Python)
+================================================
+
+Step 1: Go to https://www.dropbox.com/developers/apps/create
+        - Select "Scoped Access"
+        - Select "Full Dropbox"
+        - Name your app
+
+Step 2: Settings > OAuth2 > Set "No Expiration" > Generate token
+
+Step 3: Permissions tab > Enable:
+        account_info.write, account_info.read,
+        files.metadata.write, files.content.write, files.content.read
+        > Click Submit
+
+Step 4: pip install dropbox
+
+Step 5: Create hello.txt in same folder with some text
+
+Step 6: drop.py ---
+
+import dropbox
+
+token = "your_generated_token_here"
+
+def connect_to_dropbox():
+    try:
+        dbx = dropbox.Dropbox(token)
+        print("Connected to dropbox")
+
+        path = "hello.txt"
+
+        with open(path, 'rb') as f:
+            dbx.files_upload(f.read(), "/upload/upload.txt")
+
+        print("Uploaded")
+
+    except Exception as e:
+        print(str(e))
+        print("Failed")
+
+connect_to_dropbox()
+
+
+Step 7: python drop.py
+Output: Connected to dropbox
+        Uploaded
